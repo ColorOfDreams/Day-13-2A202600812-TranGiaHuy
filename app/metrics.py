@@ -38,15 +38,32 @@ def percentile(values: list[int], p: int) -> float:
 
 
 def snapshot() -> dict:
+    latency_p50_ms = percentile(REQUEST_LATENCIES, 50)
+    latency_p95_ms = percentile(REQUEST_LATENCIES, 95)
+    latency_p99_ms = percentile(REQUEST_LATENCIES, 99)
+    total_errors = sum(ERRORS.values())
+    total_attempts = TRAFFIC + total_errors
+    error_rate_pct = (total_errors / total_attempts) * 100 if total_attempts else 0.0
+    total_cost_usd = round(sum(REQUEST_COSTS), 4)
+    quality_score_avg = round(mean(QUALITY_SCORES), 4) if QUALITY_SCORES else 0.0
+
     return {
         "traffic": TRAFFIC,
-        "latency_p50": percentile(REQUEST_LATENCIES, 50),
-        "latency_p95": percentile(REQUEST_LATENCIES, 95),
-        "latency_p99": percentile(REQUEST_LATENCIES, 99),
+        "request_count": TRAFFIC,
+        "latency_p50": latency_p50_ms,
+        "latency_p95": latency_p95_ms,
+        "latency_p99": latency_p99_ms,
+        "latency_p50_ms": latency_p50_ms,
+        "latency_p95_ms": latency_p95_ms,
+        "latency_p99_ms": latency_p99_ms,
         "avg_cost_usd": round(mean(REQUEST_COSTS), 4) if REQUEST_COSTS else 0.0,
-        "total_cost_usd": round(sum(REQUEST_COSTS), 4),
+        "total_cost_usd": total_cost_usd,
+        "hourly_cost_usd": total_cost_usd,
+        "daily_cost_usd": total_cost_usd,
         "tokens_in_total": sum(REQUEST_TOKENS_IN),
         "tokens_out_total": sum(REQUEST_TOKENS_OUT),
         "error_breakdown": dict(ERRORS),
-        "quality_avg": round(mean(QUALITY_SCORES), 4) if QUALITY_SCORES else 0.0,
+        "error_rate_pct": round(error_rate_pct, 4),
+        "quality_avg": quality_score_avg,
+        "quality_score_avg": quality_score_avg,
     }

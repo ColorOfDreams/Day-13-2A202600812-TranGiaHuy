@@ -8,6 +8,14 @@ Required Layer-2 panels:
 5. Tokens in/out
 6. Quality proxy (heuristic, thumbs, or regenerate rate)
 
+Metric mapping from `/metrics`:
+- Latency: `latency_p50_ms`, `latency_p95_ms`, `latency_p99_ms`
+- Traffic: `request_count`
+- Error rate: `error_rate_pct`, `error_breakdown`
+- Cost: `hourly_cost_usd`, `daily_cost_usd`, `total_cost_usd`
+- Tokens: `tokens_in_total`, `tokens_out_total`
+- Quality: `quality_score_avg`
+
 Quality bar:
 - default time range = 1 hour
 - auto refresh every 15-30 seconds
